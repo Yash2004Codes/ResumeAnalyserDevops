@@ -19,7 +19,7 @@ variable "instance_type" {
 variable "repo_url" {
   description = "Git repository URL to clone on the instance (must be public)"
   type        = string
-  default     = "https://github.com/Mihit10/devops-resume-analyser.git"
+  default     = "https://github.com/Yash2004Codes/ResumeAnalyserDevops.git"
 }
 
 variable "repo_branch" {
@@ -31,7 +31,7 @@ variable "repo_branch" {
 variable "github_repo" {
   description = "GitHub repo (owner/name) allowed to assume the CI role through OIDC"
   type        = string
-  default     = "Mihit10/devops-resume-analyser"
+  default     = "Yash2004Codes/ResumeAnalyserDevops"
 }
 
 variable "create_github_oidc_provider" {

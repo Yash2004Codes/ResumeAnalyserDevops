@@ -2,8 +2,8 @@ aws_region    = "us-east-1"
 environment   = "production"
 instance_type = "t3.micro"
 
-github_repo = "Mihit10/devops-resume-analyser"
-repo_url    = "https://github.com/Mihit10/devops-resume-analyser.git"
+github_repo = "Yash2004Codes/ResumeAnalyserDevops"
+repo_url    = "https://github.com/Yash2004Codes/ResumeAnalyserDevops.git"
 repo_branch = "master"
 
 alert_email = "you@example.com"
