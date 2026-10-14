@@ -1,0 +1,12 @@
+aws_region    = "us-east-1"
+environment   = "production"
+instance_type = "t3.micro"
+
+github_repo = "Mihit10/devops-resume-analyser"
+repo_url    = "https://github.com/Mihit10/devops-resume-analyser.git"
+repo_branch = "master"
+
+alert_email = "you@example.com"
+
+# Set to false if your account already has the GitHub OIDC provider
+create_github_oidc_provider = true

@@ -1,0 +1,12 @@
+node_modules
+.next
+.git
+.gitignore
+backend
+terraform
+monitoring
+tests
+pics
+*.md
+.env.local
+.env*.local
