@@ -28,6 +28,9 @@ Important rules:
 - suggestions should be a list of actionable improvement strings.
 """
 
+# Groq retires models over time; override with GROQ_MODEL instead of editing code
+DEFAULT_MODEL = "openai/gpt-oss-120b"
+
 
 def analyze_resume(resume_text: str) -> dict:
     """
@@ -50,6 +53,10 @@ def analyze_resume(resume_text: str) -> dict:
             "Get your API key at https://console.groq.com"
         )
 
+    model = os.getenv("GROQ_MODEL") or DEFAULT_MODEL
+    # gpt-oss models reason before answering; keep that short so the JSON fits in max_tokens
+    extra_body = {"reasoning_effort": "low"} if model.startswith("openai/gpt-oss") else None
+
     try:
         client = Groq(api_key=api_key)
 
@@ -58,10 +65,11 @@ def analyze_resume(resume_text: str) -> dict:
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": resume_text},
             ],
-            model="llama-3.3-70b-versatile",
+            model=model,
             temperature=0.3,
-            max_tokens=2048,
+            max_tokens=4096,
             response_format={"type": "json_object"},
+            extra_body=extra_body,
         )
 
         response_text = chat_completion.choices[0].message.content
