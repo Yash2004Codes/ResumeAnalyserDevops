@@ -8,7 +8,7 @@ source /etc/resume-analyzer.env   # AWS_REGION, ECR_REGISTRY, S3_BUCKET
 
 APP_DIR=/opt/devops-resume-analyser
 cd "$APP_DIR"
-COMPOSE="docker compose -f docker-compose.prod.yml"
+COMPOSE="docker compose -f docker-compose.prod.yml --profile monitoring"   # Prometheus, Grafana, Node Exporter
 
 param() {
   aws ssm get-parameter --region "$AWS_REGION" --with-decryption \
