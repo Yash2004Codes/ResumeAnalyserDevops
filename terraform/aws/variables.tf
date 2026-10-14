@@ -50,3 +50,9 @@ variable "budget_limit_usd" {
   type        = string
   default     = "0.01"
 }
+
+variable "github_repo_immutable_subject" {
+  description = "Optional ID-based OIDC subject prefix, e.g. repo:Owner@123/Repo@456 (GitHub repo OIDC sub-claim setting)"
+  type        = string
+  default     = ""
+}

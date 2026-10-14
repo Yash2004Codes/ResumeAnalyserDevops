@@ -23,7 +23,13 @@ resource "aws_iam_role" "github_ci" {
       Condition = {
         StringEquals = {
           "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com"
-          "token.actions.githubusercontent.com:sub" = "repo:${var.github_repo}:ref:refs/heads/${var.repo_branch}"
+        }
+        # Plain-name subject, plus the immutable (ID-based) subject newer repos send
+        StringLike = {
+          "token.actions.githubusercontent.com:sub" = concat(
+            ["repo:${var.github_repo}:ref:refs/heads/${var.repo_branch}"],
+            var.github_repo_immutable_subject == "" ? [] : ["${var.github_repo_immutable_subject}:ref:refs/heads/${var.repo_branch}"],
+          )
         }
       }
     }]
