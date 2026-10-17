@@ -1,0 +1,266 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 1000" width="1400" height="1000" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <style>
+    .title { font-size: 26px; font-weight: 700; fill: #1f2937; }
+    .h { font-size: 17px; font-weight: 700; fill: #1f2937; }
+    .bt { font-size: 14px; font-weight: 700; fill: #111827; text-anchor: middle; }
+    .t { font-size: 12.5px; fill: #374151; text-anchor: middle; }
+    .tl { font-size: 12.5px; fill: #374151; }
+    .lbl { font-size: 11.5px; fill: #4b5563; font-style: italic; }
+    .ci { fill: #eef4ff; stroke: #3b6fd8; stroke-width: 1.5; }
+    .aws { fill: #fff4e6; stroke: #e07b00; stroke-width: 1.5; }
+    .ctr { fill: #ecfdf5; stroke: #059669; stroke-width: 1.5; }
+    .ext { fill: #f3f4f6; stroke: #6b7280; stroke-width: 1.5; }
+    .ok { fill: #dcfce7; stroke: #16a34a; stroke-width: 1.5; }
+    .bad { fill: #fee2e2; stroke: #dc2626; stroke-width: 1.5; }
+    .tf { fill: #f5f3ff; stroke: #7c3aed; stroke-width: 1.5; }
+    .a { stroke: #4b5563; stroke-width: 1.8; fill: none; marker-end: url(#arr); }
+    .ag { stroke: #16a34a; stroke-width: 1.8; fill: none; marker-end: url(#arrg); }
+    .ar { stroke: #dc2626; stroke-width: 1.8; fill: none; marker-end: url(#arrr); }
+  </style>
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4b5563"/></marker>
+    <marker id="arrg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#16a34a"/></marker>
+    <marker id="arrr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#dc2626"/></marker>
+  </defs>
+
+  <rect width="1400" height="1000" fill="#ffffff"/>
+  <text x="20" y="42" class="title">DevOps Resume Analyser: end-to-end flow</text>
+
+  <!-- ================= 1. CI/CD ================= -->
+  <text x="20" y="82" class="h">1 · CI/CD: push to master → live (GitHub Actions)</text>
+
+  <rect x="20" y="100" width="120" height="135" rx="10" class="ext"/>
+  <text x="80" y="128" class="bt">Developer</text>
+  <text x="80" y="152" class="t">edit code</text>
+  <text x="80" y="170" class="t">git push</text>
+
+  <rect x="165" y="100" width="130" height="135" rx="10" class="ext"/>
+  <text x="230" y="128" class="bt">GitHub</text>
+  <text x="230" y="152" class="t">master branch</text>
+  <text x="230" y="170" class="t">Actions triggered</text>
+
+  <rect x="320" y="100" width="170" height="135" rx="10" class="ci"/>
+  <text x="405" y="128" class="bt">CI checks (parallel)</text>
+  <text x="405" y="152" class="t">pytest + coverage</text>
+  <text x="405" y="170" class="t">eslint · tsc</text>
+  <text x="405" y="188" class="t">gitleaks (secrets)</text>
+  <text x="405" y="206" class="t">SonarCloud</text>
+  <text x="405" y="224" class="t">terraform validate</text>
+
+  <rect x="515" y="100" width="175" height="135" rx="10" class="ci"/>
+  <text x="602" y="128" class="bt">Build &amp; scan</text>
+  <text x="602" y="152" class="t">OIDC → temp AWS creds</text>
+  <text x="602" y="170" class="t">(no stored keys)</text>
+  <text x="602" y="188" class="t">docker build</text>
+  <text x="602" y="206" class="t">Trivy: block CRITICAL</text>
+
+  <rect x="715" y="100" width="135" height="135" rx="10" class="aws"/>
+  <text x="782" y="128" class="bt">Amazon ECR</text>
+  <text x="782" y="152" class="t">tag = git SHA</text>
+  <text x="782" y="170" class="t">immutable tags</text>
+  <text x="782" y="188" class="t">keeps last 3</text>
+
+  <rect x="875" y="100" width="140" height="135" rx="10" class="aws"/>
+  <text x="945" y="128" class="bt">SSM Run Cmd</text>
+  <text x="945" y="152" class="t">no SSH, port 22</text>
+  <text x="945" y="170" class="t">closed</text>
+  <text x="945" y="188" class="t">CI polls status</text>
+  <text x="945" y="206" class="t">(up to 15 min)</text>
+
+  <rect x="1040" y="100" width="175" height="135" rx="10" class="aws"/>
+  <text x="1127" y="128" class="bt">deploy.sh on EC2</text>
+  <text x="1127" y="152" class="t">secrets ← SSM params</text>
+  <text x="1127" y="170" class="t">pull images</text>
+  <text x="1127" y="188" class="t">alembic migrate</text>
+  <text x="1127" y="206" class="t">compose up -d</text>
+  <text x="1127" y="224" class="t">health check</text>
+
+  <rect x="1240" y="100" width="140" height="135" rx="10" class="ci"/>
+  <text x="1310" y="128" class="bt">Selenium</text>
+  <text x="1310" y="152" class="t">headless Chrome</text>
+  <text x="1310" y="170" class="t">smoke test on</text>
+  <text x="1310" y="188" class="t">the live URL</text>
+
+  <path d="M142,167 H162" class="a"/>
+  <path d="M297,167 H317" class="a"/>
+  <path d="M492,167 H512" class="a"/>
+  <path d="M692,167 H712" class="a"/>
+  <path d="M852,167 H872" class="a"/>
+  <path d="M1017,167 H1037" class="a"/>
+  <path d="M1217,167 H1237" class="a"/>
+
+  <!-- deploy outcome -->
+  <path d="M1100,237 L1020,266" class="ag"/>
+  <path d="M1155,237 L1250,266" class="ar"/>
+  <rect x="805" y="268" width="250" height="32" rx="16" class="ok"/>
+  <text x="930" y="289" class="t">✓ healthy → save .last_good_tag</text>
+  <rect x="1130" y="268" width="250" height="32" rx="16" class="bad"/>
+  <text x="1255" y="289" class="t">✗ unhealthy → roll back, CI red</text>
+
+  <text x="20" y="282" class="tl"><tspan font-weight="700">Manual rollback:</tspan> Actions → CI/CD → Run workflow with rollback_tag = older SHA</text>
+  <text x="20" y="300" class="tl">→ skips tests and build, redeploys that image from ECR</text>
+
+  <!-- ================= 2. Runtime ================= -->
+  <text x="20" y="352" class="h">2 · Runtime: a user analyses a resume</text>
+
+  <rect x="20" y="515" width="130" height="70" rx="10" class="ext"/>
+  <text x="85" y="543" class="bt">User browser</text>
+  <text x="85" y="565" class="t">http://Elastic IP</text>
+
+  <!-- AWS cloud -->
+  <rect x="170" y="370" width="830" height="355" rx="14" fill="none" stroke="#e07b00" stroke-width="2" stroke-dasharray="8 5"/>
+  <text x="185" y="392" class="tl" font-weight="700" fill="#b45309">AWS (us-east-1) · VPC · public subnet</text>
+
+  <!-- EC2 host -->
+  <rect x="190" y="402" width="550" height="305" rx="12" fill="#fafafa" stroke="#9ca3af" stroke-width="1.5"/>
+  <text x="205" y="422" class="tl" font-weight="700">EC2 t3.micro · Docker Compose</text>
+
+  <rect x="210" y="515" width="110" height="70" rx="10" class="ctr"/>
+  <text x="265" y="543" class="bt">nginx :80</text>
+  <text x="265" y="563" class="t">only open port</text>
+
+  <rect x="370" y="432" width="150" height="58" rx="10" class="ctr"/>
+  <text x="445" y="456" class="bt">frontend</text>
+  <text x="445" y="476" class="t">Next.js :3000</text>
+
+  <rect x="370" y="580" width="150" height="70" rx="10" class="ctr"/>
+  <text x="445" y="604" class="bt">backend</text>
+  <text x="445" y="624" class="t">FastAPI :8000</text>
+  <text x="445" y="641" class="t">/analyze /history</text>
+
+  <rect x="560" y="432" width="165" height="58" rx="10" class="ext"/>
+  <text x="642" y="456" class="bt">Monitoring</text>
+  <text x="642" y="476" class="t">Prometheus · Grafana</text>
+
+  <rect x="560" y="565" width="165" height="50" rx="10" class="ctr"/>
+  <text x="642" y="586" class="bt">Postgres</text>
+  <text x="642" y="604" class="t">analysis history</text>
+
+  <rect x="560" y="635" width="165" height="50" rx="10" class="ctr"/>
+  <text x="642" y="656" class="bt">Redis</text>
+  <text x="642" y="674" class="t">cache 24 h · rate limit</text>
+
+  <path d="M152,550 H207" class="a"/>
+  <path d="M322,538 L367,468" class="a"/>
+  <text x="330" y="495" class="lbl">/</text>
+  <path d="M322,562 L367,608" class="a"/>
+  <text x="300" y="610" class="lbl">/api/*</text>
+  <path d="M522,600 L557,592" class="a"/>
+  <path d="M522,630 L557,656" class="a"/>
+  <path d="M642,563 V493" class="a" stroke-dasharray="4 3"/>
+  <text x="648" y="532" class="lbl">scrape /metrics</text>
+
+  <!-- AWS managed services -->
+  <rect x="770" y="432" width="210" height="58" rx="10" class="aws"/>
+  <text x="875" y="456" class="bt">SSM Parameter Store</text>
+  <text x="875" y="476" class="t">Groq key · DB password</text>
+
+  <rect x="770" y="520" width="210" height="58" rx="10" class="aws"/>
+  <text x="875" y="544" class="bt">S3 resumes</text>
+  <text x="875" y="564" class="t">encrypted · deleted after 7 days</text>
+
+  <rect x="770" y="605" width="210" height="72" rx="10" class="aws"/>
+  <text x="875" y="629" class="bt">CloudWatch alarms</text>
+  <text x="875" y="649" class="t">status checks → reboot</text>
+  <text x="875" y="666" class="t">or recover the instance</text>
+
+  <path d="M522,592 H545 V549 H767" class="a"/>
+  <path d="M445,652 V697 H1017" class="a"/>
+  <text x="790" y="714" class="lbl">HTTPS → Groq LLM</text>
+
+  <rect x="1020" y="665" width="160" height="58" rx="10" class="ext"/>
+  <text x="1100" y="689" class="bt">Groq API</text>
+  <text x="1100" y="709" class="t">gpt-oss-120b</text>
+
+  <!-- request steps -->
+  <rect x="1020" y="370" width="360" height="280" rx="12" fill="#f9fafb" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="1036" y="396" class="tl" font-weight="700">POST /api/analyze (PDF)</text>
+  <text x="1036" y="422" class="tl">1. Rate limit: Redis, 10/min per IP → else 429</text>
+  <text x="1036" y="446" class="tl">2. Validate: .pdf, not empty → else 400</text>
+  <text x="1036" y="470" class="tl">3. SHA-256 of the file → Redis cache hit?</text>
+  <text x="1056" y="490" class="tl" fill="#16a34a">yes → return instantly (no Groq call)</text>
+  <text x="1036" y="514" class="tl">4. pdfplumber extracts the text</text>
+  <text x="1036" y="538" class="tl">5. Groq scores: skills · ATS score · tips</text>
+  <text x="1036" y="562" class="tl">6. Save PDF to S3 (encrypted)</text>
+  <text x="1036" y="586" class="tl">7. Save the result row to Postgres</text>
+  <text x="1036" y="610" class="tl">8. Cache the result in Redis for 24 h</text>
+  <text x="1036" y="634" class="tl">9. Return JSON → the score is shown</text>
+
+  <!-- ================= 3. Self-healing ================= -->
+  <text x="20" y="765" class="h">3 · Self-healing</text>
+
+  <rect x="20" y="782" width="300" height="28" rx="14" class="bad"/>
+  <text x="170" y="801" class="t">Container crashes</text>
+  <path d="M322,796 H355" class="a"/>
+  <rect x="360" y="782" width="320" height="28" rx="14" class="ok"/>
+  <text x="520" y="801" class="t">restart: always brings it back</text>
+
+  <rect x="20" y="818" width="300" height="28" rx="14" class="bad"/>
+  <text x="170" y="837" class="t">Site down (uptime.yml, every 10 min)</text>
+  <path d="M322,832 H355" class="a"/>
+  <rect x="360" y="818" width="320" height="28" rx="14" class="ok"/>
+  <text x="520" y="837" class="t">SSM restarts the stack; still down → email</text>
+
+  <rect x="20" y="854" width="300" height="28" rx="14" class="bad"/>
+  <text x="170" y="873" class="t">OS hangs (out of memory)</text>
+  <path d="M322,868 H355" class="a"/>
+  <rect x="360" y="854" width="320" height="28" rx="14" class="ok"/>
+  <text x="520" y="873" class="t">CloudWatch reboots the instance</text>
+
+  <rect x="20" y="890" width="300" height="28" rx="14" class="bad"/>
+  <text x="170" y="909" class="t">AWS hardware fails</text>
+  <path d="M322,904 H355" class="a"/>
+  <rect x="360" y="890" width="320" height="28" rx="14" class="ok"/>
+  <text x="520" y="909" class="t">CloudWatch recovers: same IP and disk</text>
+
+  <rect x="20" y="926" width="300" height="28" rx="14" class="bad"/>
+  <text x="170" y="945" class="t">Bad release fails its health check</text>
+  <path d="M322,940 H355" class="a"/>
+  <rect x="360" y="926" width="320" height="28" rx="14" class="ok"/>
+  <text x="520" y="945" class="t">deploy.sh rolls back to the last good tag</text>
+
+  <!-- ================= 4. Terraform ================= -->
+  <text x="720" y="765" class="h">4 · Infrastructure changes (Terraform in CI)</text>
+
+  <rect x="720" y="782" width="140" height="58" rx="10" class="ext"/>
+  <text x="790" y="806" class="bt">Edit .tf</text>
+  <text x="790" y="826" class="t">open a PR</text>
+
+  <rect x="890" y="782" width="140" height="58" rx="10" class="tf"/>
+  <text x="960" y="806" class="bt">terraform plan</text>
+  <text x="960" y="826" class="t">read-only role</text>
+
+  <rect x="1060" y="782" width="140" height="58" rx="10" class="tf"/>
+  <text x="1130" y="806" class="bt">Plan comment</text>
+  <text x="1130" y="826" class="t">reviewed on PR</text>
+
+  <rect x="1230" y="782" width="150" height="58" rx="10" class="ext"/>
+  <text x="1305" y="806" class="bt">Merge</text>
+  <text x="1305" y="826" class="t">to master</text>
+
+  <rect x="1230" y="872" width="150" height="58" rx="10" class="tf"/>
+  <text x="1305" y="896" class="bt">Plan again</text>
+  <text x="1305" y="916" class="t">changes? continue</text>
+
+  <rect x="1060" y="872" width="140" height="58" rx="10" class="bad"/>
+  <text x="1130" y="896" class="bt">Approval gate</text>
+  <text x="1130" y="916" class="t">production env</text>
+
+  <rect x="890" y="872" width="140" height="58" rx="10" class="tf"/>
+  <text x="960" y="896" class="bt">terraform apply</text>
+  <text x="960" y="916" class="t">apply role</text>
+
+  <rect x="720" y="872" width="140" height="58" rx="10" class="aws"/>
+  <text x="790" y="896" class="bt">AWS updated</text>
+  <text x="790" y="916" class="t">matches git</text>
+
+  <path d="M862,811 H887" class="a"/>
+  <path d="M1032,811 H1057" class="a"/>
+  <path d="M1202,811 H1227" class="a"/>
+  <path d="M1305,842 V869" class="a"/>
+  <path d="M1228,901 H1203" class="a"/>
+  <path d="M1058,901 H1033" class="a"/>
+  <path d="M888,901 H863" class="a"/>
+
+  <text x="720" y="962" class="tl">State in S3 with locking · applies queue, never overlap · local runs: bootstrap + plan only</text>
+</svg>

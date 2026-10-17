@@ -93,7 +93,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: 1.10.5
+          terraform_version: 1.16.5
       - name: fmt + validate
         working-directory: terraform/aws
         run: |
@@ -151,13 +151,16 @@ jobs:
             --parameters "commands=[\"$CMD\"]" \
             --timeout-seconds 900 \
             --query Command.CommandId --output text)
-          if ! aws ssm wait command-executed --command-id "$CMD_ID" --instance-id "${{ vars.EC2_INSTANCE_ID }}"; then
-            aws ssm get-command-invocation --command-id "$CMD_ID" --instance-id "${{ vars.EC2_INSTANCE_ID }}" \
-              --query '[StandardOutputContent,StandardErrorContent]' --output text
-            exit 1
-          fi
+          # `aws ssm wait` gives up after ~100s; a deploy can take several minutes, so poll up to 15 min
+          for i in $(seq 1 90); do
+            STATUS=$(aws ssm get-command-invocation --command-id "$CMD_ID" --instance-id "${{ vars.EC2_INSTANCE_ID }}" \
+              --query Status --output text 2>/dev/null || echo Pending)
+            case "$STATUS" in Pending|InProgress|Delayed) sleep 10 ;; *) break ;; esac
+          done
           aws ssm get-command-invocation --command-id "$CMD_ID" --instance-id "${{ vars.EC2_INSTANCE_ID }}" \
-            --query StandardOutputContent --output text
+            --query '[StandardOutputContent,StandardErrorContent]' --output text
+          echo "SSM status: $STATUS"
+          [ "$STATUS" = Success ]
 
   e2e-selenium:
     # Smoke-tests the live site after every deploy (headless Chrome is preinstalled on ubuntu-latest)

@@ -1,0 +1,64 @@
+name: Uptime
+
+# Pings the live site every 10 minutes; if it is down, restarts the stack on the host through SSM.
+# A failed run (site still down after healing) triggers GitHub's failure email.
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: uptime
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # OIDC
+      contents: read
+    env:
+      APP_URL: ${{ vars.APP_URL }}
+    steps:
+      - name: Health check
+        id: probe
+        run: |
+          for i in 1 2 3; do
+            if curl -fsS -m 15 "$APP_URL/api/health" >/dev/null && curl -fsS -m 15 "$APP_URL/" >/dev/null; then
+              echo "up=true" >> "$GITHUB_OUTPUT"; exit 0
+            fi
+            sleep 20
+          done
+          echo "::warning::$APP_URL is down"
+          echo "up=false" >> "$GITHUB_OUTPUT"
+
+      - if: steps.probe.outputs.up == 'false'
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Heal (restart the stack)
+        if: steps.probe.outputs.up == 'false'
+        run: |
+          CMD="cd /opt/devops-resume-analyser && docker compose -f docker-compose.prod.yml --profile monitoring up -d && docker compose -f docker-compose.prod.yml restart nginx"
+          CMD_ID=$(aws ssm send-command \
+            --instance-ids "${{ vars.EC2_INSTANCE_ID }}" \
+            --document-name AWS-RunShellScript \
+            --parameters "commands=[\"$CMD\"]" \
+            --timeout-seconds 600 \
+            --query Command.CommandId --output text)
+          for i in $(seq 1 60); do
+            STATUS=$(aws ssm get-command-invocation --command-id "$CMD_ID" --instance-id "${{ vars.EC2_INSTANCE_ID }}" \
+              --query Status --output text 2>/dev/null || echo Pending)
+            case "$STATUS" in Pending|InProgress|Delayed) sleep 10 ;; *) break ;; esac
+          done
+          echo "SSM status: $STATUS"
+          for i in $(seq 1 12); do
+            curl -fsS -m 15 "$APP_URL/api/health" >/dev/null && curl -fsS -m 15 "$APP_URL/" >/dev/null && { echo "Recovered"; exit 0; }
+            sleep 10
+          done
+          echo "::error::$APP_URL is still down after restarting the stack"
+          exit 1

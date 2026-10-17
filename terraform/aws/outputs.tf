@@ -13,6 +13,16 @@ output "github_ci_role_arn" {
   value       = aws_iam_role.github_ci.arn
 }
 
+output "github_terraform_plan_role_arn" {
+  description = "Set as GitHub repo variable TF_PLAN_ROLE_ARN"
+  value       = aws_iam_role.github_terraform_plan.arn
+}
+
+output "github_terraform_apply_role_arn" {
+  description = "Set as GitHub repo variable TF_APPLY_ROLE_ARN"
+  value       = aws_iam_role.github_terraform_apply.arn
+}
+
 output "ecr_registry" {
   value = local.ecr_registry
 }

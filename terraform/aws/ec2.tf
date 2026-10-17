@@ -49,6 +49,11 @@ resource "aws_instance" "app_server" {
   tags = {
     Name = "resume-analyzer-server"
   }
+
+  # most_recent picks up every new Ubuntu image; without this, CI applies would replace the server
+  lifecycle {
+    ignore_changes = [ami]
+  }
 }
 
 # Static IP (free while attached to a running instance, within the Free Tier public-IPv4 hours)
