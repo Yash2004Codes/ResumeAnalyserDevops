@@ -2,7 +2,18 @@
 
 An AI-powered Resume Analyzer application built with a robust DevOps toolchain. This project utilizes a Next.js frontend, a FastAPI Python backend, and the Groq API to parse and analyze resumes, extracting skills, calculating ATS scores, and providing improvement suggestions.
 
-It is designed with a strong focus on CI/CD and Infrastructure as Code (IaC), featuring an automated Jenkins pipeline, SonarQube code quality checks, and Selenium E2E testing, all orchestrated via Docker and Terraform.
+It is designed with a strong focus on CI/CD and Infrastructure as Code (IaC): a GitHub Actions pipeline with tests, security scans and SonarCloud builds images, pushes them to Amazon ECR and deploys them to AWS EC2 through SSM, with automatic rollback, self-healing and Terraform-managed infrastructure.
+
+## 🌐 Live Demo
+
+**http://54.156.239.56**
+
+Upload a PDF resume to get extracted skills, an ATS score and improvement suggestions.
+
+- API health check: http://54.156.239.56/api/health
+- How it works end to end: [flow.md](flow.md) and the diagram below
+
+![DevOps flow](devops-flow.svg)
 
 ## 🚀 Features
 
